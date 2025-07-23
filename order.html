@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTAS - Оформление заказа</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <style>
+/* ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===== */
+:root {
+  --black: #0a0a0a;
+  --dark: #111111;
+  --darker: #1a1a1a;
+  --gray: #2e2e2e;
+  --light-gray: #4a4a4a;
+  --light: #e0e0e0;
+  --accent: #ffffff;
+  --accent-dark: #b3b3b3;
+  --glow: rgba(255, 255, 255, 0.1);
+  --neon: 0 0 10px rgba(255,255,255,0.8);
+  --neon-accent: 0 0 15px rgba(255,255,255,0.9);
+  --glass: rgba(255,255,255,0.05);
+  --glass-border: rgba(255,255,255,0.2);
+}
+
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  src: url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;700&display=swap');
+}
+
+body {
+  background: 
+    radial-gradient(circle at 20% 30%, var(--dark) 0%, var(--black) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+  color: var(--light);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* ===== ПРОСТОЙ ХЕДЕР ===== */
+.simple-header {
+  text-align: center;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.simple-header .logo {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.simple-header .subtitle {
+  font-size: 1rem;
+  letter-spacing: 0.5rem;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+}
+
+/* ===== ИНФОРМАЦИОННЫЙ БЛОК В СТИЛЕ ЖИДКОГО СТЕКЛА ===== */
+.info-block {
+  background: rgba(30, 30, 30, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 3rem auto;
+  max-width: 800px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.3),
+    inset 0 0 15px rgba(255,255,255,0.05);
+  animation: fadeIn 1s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-block::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 0%,
+    rgba(255,255,255,0.03) 50%,
+    transparent 100%
+  );
+  transform: rotate(30deg);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.info-block:hover::before {
+  opacity: 1;
+  animation: liquidShine 3s linear infinite;
+}
+
+.info-block p {
+  color: var(--accent-dark);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 2;
+}
+
+.highlight {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ===== ФОРМА ЗАКАЗА В СТИЛЕ ЖИДКОГО СТЕКЛА ===== */
+.order-container {
+  background: rgba(30, 30, 30, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  padding: 3rem;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 15px 40px rgba(0,0,0,0.4),
+    inset 0 0 20px rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 1s ease-out;
+}
+
+.order-container::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 8px;
+  pointer-events: none;
+  animation: borderPulse 8s infinite linear;
+}
+
+.order-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+}
+
+.order-header h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  margin-bottom: 0.5rem;
+  text-shadow: var(--neon);
+}
+
+.order-header h1 span {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 0.5rem;
+  color: var(--accent-dark);
+  margin-top: 0.5rem;
+}
+
+/* ===== ФОРМА ===== */
+#order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.form-group label {
+  color: var(--accent);
+  font-size: 1.1rem;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+}
+
+.form-group input, 
+.form-group select {
+  padding: 1.2rem;
+  background: rgba(10, 10, 10, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 1rem;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 
+    0 0 0 2px rgba(255, 255, 255, 0.2),
+    var(--neon-accent);
+}
+
+.form-group input::placeholder {
+  color: var(--light-gray);
+}
+
+/* ===== РАДИО КНОПКИ В СТИЛЕ ЖИДКОГО СТЕКЛА ===== */
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.radio-option {
+  flex: 1;
+  position: relative;
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.2rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(20, 20, 20, 0.4);
+  color: var(--accent-dark);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 
+    0 4px 15px rgba(0,0,0,0.2),
+    inset 0 1px 1px rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.radio-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.1),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.3),
+    inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+.radio-option input[type="radio"]:checked + .radio-label::before {
+  left: 100%;
+}
+
+.radio-option:hover .radio-label {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 25px rgba(0,0,0,0.3),
+    inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* ===== КНОПКА ОТПРАВКИ В СТИЛЕ ЖИДКОГО СТЕКЛА ===== */
+.submit-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+  color: var(--black);
+  border: none;
+  padding: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 8px;
+  margin-top: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 5px 20px rgba(255, 255, 255, 0.3),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+  z-index: 1;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 10px 30px rgba(255, 255, 255, 0.5),
+    inset 0 0 15px rgba(255,255,255,0.3);
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:active {
+  transform: translateY(-2px);
+}
+
+.submit-btn i {
+  font-size: 1.4rem;
+}
+
+/* ===== ССЫЛКА НАЗАД ===== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 3rem;
+  color: var(--accent-dark);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  background: rgba(30, 30, 30, 0.4);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.back-link:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ===== АНИМАЦИИ ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes liquidShine {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 992px) {
+  .simple-header .logo {
+    font-size: 2.5rem;
+  }
+  
+  .order-container {
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .simple-header .logo {
+    font-size: 2rem;
+    letter-spacing: 0.2rem;
+  }
+  
+  .simple-header .subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 0.3rem;
+  }
+  
+  .order-container {
+    padding: 2rem;
+    margin: 0 1.5rem 3rem;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .info-block {
+    margin: 2rem 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .simple-header .logo {
+    font-size: 1.8rem;
+  }
+  
+  .order-container {
+    padding: 1.5rem;
+  }
+  
+  .order-header h1 {
+    font-size: 2rem;
+  }
+  
+  .form-group input, 
+  .form-group select {
+    padding: 1rem;
+  }
+  
+  .submit-btn {
+    padding: 1.2rem;
+    font-size: 1.1rem;
+  }
+}
+    </style>
+</head>
+<body>
+    <header class="simple-header">
+        <h1 class="logo">VORTAS STORE</h1>
+        <p class="subtitle">design store by vortas</p>
+    </header>
+
+    <!-- Информационный блок -->
+    <div class="info-block">
+        <p>Эта форма собирает основные данные для вашего заказа.</p>
+        <p>После отправки формы сайт перенаправит вас в личные сообщения <span class="highlight">@vortasdesign</span> в Telegram.</p>
+        <p>У вас появиться форма заказа, вы должны её отправить!!!</p>
+    </div>
+
+    <main>
+        <div class="order-container">
+            <div class="order-header">
+                <h1>VORTAS STORE <span>Оформление заказа</span></h1>
+            </div>
+            
+            <form id="order-form">
+                <input type="hidden" id="product-type" name="product-type">
+                
+                <div class="form-group">
+                    <label for="product-name">Тип позиции:</label>
+                    <input type="text" id="product-name" name="product-name" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Ваш юзернейм в Telegram:</label>
+                    <input type="text" id="username" name="username" required 
+                           placeholder="@username" 
+                           pattern="@[a-zA-Z0-9_]{5,32}" 
+                           title="Юзернейм должен начинаться с @ и содержать 5-32 символа (буквы, цифры, подчеркивания)">
+                </div>
+                
+                <div class="form-group">
+                    <label>Оплата:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="Рубли" checked>
+                            <span class="radio-label">
+                                <i class="fas fa-ruble-sign"></i>
+                                <span>Рубли</span>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="payment" value="Робуксы">
+                            <span class="radio-label">
+                                <i class="fas fa-coins"></i>
+                                <span>Робуксы</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="urgency">Срочность:</label>
+                    <select id="urgency" name="urgency" required>
+                        <option value="" disabled selected>Выберите срочность</option>
+                        <option value="Стандарт (3-13 дней)">Стандарт (3-13 дней)</option>
+                        <option value="Срочно (1-5 дня)">Срочно (1-6 дня)</option>
+                        <option value="Очень срочно (1-2 дня)">Очень срочно (1-3 дня)</option>
+                        <option value="Очень срочно (24 часа)">Сверх срочно (24 часа)</option>
+                    </select>
+                </div>
+               
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Отправить заказ</span>
+                </button>
+            </form>
+            
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Вернуться к каталогу</span>
+            </a>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем параметр из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productParam = urlParams.get('product');
+        
+        // Декодируем и устанавливаем значение товара
+        if (productParam) {
+            try {
+                const productName = decodeURIComponent(productParam);
+                document.getElementById('product-type').value = productName;
+                document.getElementById('product-name').value = productName;
+            } catch (e) {
+                console.error('Ошибка декодирования параметра:', e);
+                document.getElementById('product-name').value = 'Товар не указан';
+            }
+        } else {
+            document.getElementById('product-name').value = 'Товар не указан';
+        }
+
+// Отправка формы в Telegram
+document.getElementById('order-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Отправка...</span>';
+    
+    try {
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        const username = data.username;
+        
+        // Проверка формата юзернейма
+        if (!username.startsWith('@')) {
+            alert('❌ Юзернейм должен начинаться с символа @');
+            return;
+        }
+        
+        // Формируем сообщение для Telegram
+        const message = 
+                       `👤 Юзернейм заказчика: ${username}\n` +
+                       `🖼 Товар: ${data['product-name'] || 'Не указан'}\n` +
+                       `💳 Оплата: ${data.payment || 'Не указана'}\n` +
+                       `⏱ Срочность: ${data.urgency || 'Не указана'}\n` +
+                       `🕒 ${new Date().toLocaleString()}`;
+        
+        // Отправляем в Telegram бота
+        const botToken = '7821395108:AAG8syY7xCdTvN6I4dbKNPWJpax8DSLpylY';
+        const chatId = '7996423882'; // Основной чат
+        const notificationChatId = '7540943060'; // Чат для уведомлений
+        
+        // Отправка основного сообщения
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message
+            })
+        });
+        
+        // Отправка уведомления в другой чат
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: notificationChatId,
+                text: `❗ У вас новый заказ!\n\n${message}`
+            })
+        });
+        
+        // Открываем Telegram с готовым сообщением
+        const telegramUrl = `https://t.me/vortasdesign?text=${encodeURIComponent(message)}`;
+        window.open(telegramUrl, '_blank');
+        
+        alert('✅ Заказ успешно отправлен! Теперь вы можете продолжить общение в Telegram.');
+        window.location.href = 'index.html';
+        
+    } catch (error) {
+        console.error('Ошибка отправки:', error);
+        alert('❌ Ошибка при отправке: ' + error.message + '\n\nПожалуйста, свяжитесь с нами через Telegram напрямую в блоке "Контакты".');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }
+});
+    });
+    </script>
+</body>
+</html>
